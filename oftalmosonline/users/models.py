@@ -37,7 +37,6 @@ class UserCalendar(models.Model):
 def post_save_user_receiver(sender, instance, created,**kwargs):
     if created:
         calendar=UserCalendar.objects.create(user=instance)
-        calendar.events.add(id=0)
         instance.save()
 
 
