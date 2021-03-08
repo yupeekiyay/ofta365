@@ -4,7 +4,6 @@ from .base import env
 # GENERAL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
-DJANGO_SECRET_KEY='cl3JT5rWdjPqs8Aycn2De0jcicl280cCEJ5mL8S4tRIC1E7N8DRkWSvDafdpWqIL'
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 DJANGO_ALLOWED_HOSTS=['oftalmosonline.herokuapp.com']
