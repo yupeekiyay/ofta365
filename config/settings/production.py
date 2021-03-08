@@ -7,7 +7,7 @@ from .base import env
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 DJANGO_ALLOWED_HOSTS=['oftalmosonline.herokuapp.com']
-ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS")
+ALLOWED_HOSTS = ['oftalmosonline.herokuapp.com', '*.herokuapp.comm','planedo.digital']
 # DATABASES
 # ------------------------------------------------------------------------------
 DATABASES["default"] = env.db("DATABASE_URL")  # noqa F405
