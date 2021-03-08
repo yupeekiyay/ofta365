@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+Event details
+{% endblock title %}
+{% block content %}
+<div class="container my-5 py-5 z-depth-1">
+
+
+    <!--Section: Content-->
+    <section class="text-center">
+
+        <!-- Section heading -->
+        <h3 class="font-weight-bold mb-5">Event Details</h3>
+
+        <div class="row">
+
+            <div class="col-lg-6">
+                <img src="{% if event.cover %}{{ event.cover.url }}{% else %}{% static 'images/template_image.png' %}{% endif %}"
+                    class="img-fluid">
+                <!--Carousel Wrapper-->
+
+                <!--/.Carousel Wrapper-->
+
+            </div>
+
+            <div class="col-lg-5 text-center text-md-left">
+
+                <h2
+                    class="h2-responsive text-center text-md-left product-name font-weight-bold dark-grey-text mb-1 ml-xl-0 ml-4">
+                    <strong>{{event.title}}</strong>
+                </h2>
+                {% for tag in event.tags.all %}
+                <span class="badge badge-danger product mb-4 ml-xl-0 ml-4">{{tag.tag}}</span>
+                {% endfor %}
+                <h3 class="h3-responsive text-center text-md-left mb-5 ml-xl-0 ml-4">
+                    <span class="red-text font-weight-bold">
+                        <strong>{{event.event_format}}</strong>
+                    </span>
+
+                </h3>
+
+                <!--Accordion wrapper-->
+                <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
+
+                    <!-- Accordion card -->
+                    <div class="card">
+
+                        <!-- Card header -->
+                        <div class="card-header" role="tab" id="headingOne1">
+                            <a data-toggle="collapse" data-parent="#accordionEx" href="#collapseOne1"
+                                aria-expanded="true" aria-controls="collapseOne1">
+                                <h5 class="mb-0">
+                                    Description
+                                    <i class="fas fa-angle-down rotate-icon"></i>
+                                </h5>
+                            </a>
+                        </div>
+
+                        <!-- Card body -->
+                        <div id="collapseOne1" class="collapse show" role="tabpanel" aria-labelledby="headingOne1"
+                            data-parent="#accordionEx">
+                            <div class="card-body">
+                                {{ event.description }}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Accordion card -->
+
+                    <!-- Accordion card -->
+                    <div class="card">
+
+                        <!-- Card header -->
+                        <div class="card-header" role="tab" id="headingTwo2">
+                            <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseTwo2"
+                                aria-expanded="false" aria-controls="collapseTwo2">
+                                <h5 class="mb-0">
+                                    Details
+                                    <i class="fas fa-angle-down rotate-icon"></i>
+                                </h5>
+                            </a>
+                        </div>
+
+                        <!-- Card body -->
+                        <div id="collapseTwo2" class="collapse" role="tabpanel" aria-labelledby="headingTwo2"
+                            data-parent="#accordionEx">
+                            <div class="card-body">
+                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
+                                squid.
+                                3 wolf moon officia aute,
+                                non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
+                                Brunch 3 wolf
+                                moon
+                                tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda
+                                shoreditch et.
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Accordion card -->
+
+                    <!-- Accordion card -->
+                    <div class="card">
+
+                        <!-- Card header -->
+                        <div class="card-header" role="tab" id="headingThree3">
+                            <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx"
+                                href="#collapseThree3" aria-expanded="false" aria-controls="collapseThree3">
+                                <h5 class="mb-0">
+                                    Faculty
+                                    <i class="fas fa-angle-down rotate-icon"></i>
+                                </h5>
+                            </a>
+                        </div>
+
+                        <!-- Card body -->
+                        <div id="collapseThree3" class="collapse" role="tabpanel" aria-labelledby="headingThree3"
+                            data-parent="#accordionEx">
+                            <div class="card-body">
+                                {% for faculty in event.faculty.all %}
+                                {{faculty.prefix}} {{faculty.first_name }} {{faculty.last_name}}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Accordion card -->
+
+                </div>
+                <!--/.Accordion wrapper-->
+
+                <!-- Add to Cart -->
+                <section class="color">
+                    <div class="mt-5">
+                        {% with userevents=user.usercalendar.events.all %}        
+
+                        <div class="row mt-3">
+                            <div class="col-md-12 text-center text-md-left text-md-right">
+                                <button class="btn btn-primary btn-sm likebutton" id="add{{event.id}}" href="#" value="{{ event.id}}" 
+                                {% if event in userevents %} data-action="unlike">Remove from calendar
+                                    {% else %}
+                                    data-action="like"> Add to calendar
+                                    {% endif %}
+                                </button>
+                            </div>
+                        </div>
+                        {% endwith %}
+                    </div>
+                </section>
+                <!-- /.Add to Cart -->
+
+            </div>
+
+        </div>
+
+    </section>
+    <!--Section: Content-->
+
+
+</div>
+{% csrf_token %}
+{% endblock content %}
+{% block inline_javascript %}
+<script>
+
+    $(document).ready(function () {
+        $('.likebutton').click(function () {
+            var button = $(this)
+            var text = $(this).text();
+            var event_id = $(this).val()
+            var event_action = $(this).attr('data-action')
+            //console.log(text,event_id,event_action)
+            //const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            // console.log(csrftoken)
+
+            $.ajax({
+
+                url: "{% url 'like-unlike-event' %}",
+                type: 'POST',
+
+                dataType: 'json',
+                data: { 'action': event_action, 'event_id': event_id }, //here data must be strings
+                success: function (response) {
+                    // console.log('success')
+                    // console.log(response.Newaction)
+
+                    button.attr('data-action', response.Newaction)
+                    if (response.Newaction == 'like') {
+                        button.text('Add to calendar')
+                    }
+                    else {
+                        button.text('Remove from calendar')
+
+                    }
+
+                }
+            })
+        });
+
+
+    });
+
+</script>
+<script>
+
+    // this required to ajax request it is common
+    $(function () {
+        // This function gets cookie with a given name
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            cookieValue = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken'); //here get from html because HTTP_only
+
+        /*
+        The functions below will create a header with csrftoken
+        */
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        function sameOrigin(url) {
+            // test that a given url is a same-origin URL
+            // url could be relative or scheme relative or absolute
+            var host = document.location.host; // host + port
+            var protocol = document.location.protocol;
+            var sr_origin = '//' + host;
+            var origin = protocol + sr_origin;
+            // Allow absolute or scheme relative URLs to same origin
+            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+                (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+                // or any other URL that isn't scheme relative or absolute i.e relative.
+                !(/^(\/\/|http:|https:).*/.test(url));
+        }
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+                    // Send the token to same-origin, relative URLs only.
+                    // Send the token only if the method warrants CSRF protection
+                    // Using the CSRFToken value acquired earlier
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+    });
+</script>
+<script type="text/javascript">
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    $('.likebutton').click(function () {
+        var catid;
+        catid = $(this).attr("data-catid");
+        $.ajax(
+            {
+                headers: { 'X-CSRFToken': csrftoken },
+                type: "POST",
+                url: "{% url 'discover_events' %}",
+                data: {
+                    post_id: catid
+                },
+                success: function (data) {
+                    $('#like' + catid).remove();
+                    $('#message').text(data);
+                }
+            })
+    });
+</script>
+
+
+
+
+{% endblock inline_javascript %}
