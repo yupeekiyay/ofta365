@@ -64,7 +64,7 @@ class EventListView(generic.ListView):
         return context
 
     def get_queryset(self):
-        queryset = Event.objects.filter(global_visibility=True, event_date_start__gte=datetime.date.today())
+        queryset = Event.objects.filter(status="Published",global_visibility=True, event_date_start__gte=datetime.date.today())
         return queryset
     
     # @csrf_exempt

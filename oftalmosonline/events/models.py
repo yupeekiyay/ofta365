@@ -79,7 +79,7 @@ class Event(models.Model):
     slug = models.SlugField(max_length=50,unique=True, editable=False, null=False)
     tags = models.ManyToManyField('Tag', blank=True)
     
-    category = models.ForeignKey(Category,null=True,  on_delete=models.SET_NULL)
+    category = models.ForeignKey(Category, null=True,  on_delete=models.SET_NULL)
     cover = models.ImageField(blank=True,null=True, upload_to="event_covers/")
     
 
