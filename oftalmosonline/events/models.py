@@ -10,15 +10,8 @@ from django.contrib.auth import get_user_model
 
 
 class Category(models.Model):
-    TOPIC_CHOICES = [('cataract', 'Cataract'),
-                     ('vitreo', 'Vitreoretinal'),
-                     ('optometry', 'Optometry'),
-                     ('multi', 'Multidisciplinary'),
-                     ('plastic', 'Plastic and Reconstructive surgery'),
-                     ('onco', 'Ocular oncology'),
-                     ('glaucoma', 'Glaucoma'),
-                     ('pediatrics', 'Pediatrics'), ]
-    topic = models.CharField(max_length=100, choices=TOPIC_CHOICES)
+    
+    topic = models.CharField(max_length=100)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

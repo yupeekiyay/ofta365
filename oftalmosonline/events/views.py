@@ -52,7 +52,7 @@ class EventListView(generic.ListView):
         #user = self.request.user
         context = super(EventListView, self).get_context_data(**kwargs)
         seven_days_ago=datetime.date.today()+datetime.timedelta(days=7)
-        next_in_seven=Event.objects.filter( event_date_start__gt=datetime.date.today(),event_date_start__lt=seven_days_ago)
+        next_in_seven=Event.objects.filter( event_date_start__gt=datetime.date.today(),event_date_start__lt=seven_days_ago)[:3]
         past_events=Event.objects.filter(event_date_finish__lt=datetime.date.today())
         recently_added = Event.objects.filter(created=datetime.date.today()).count()
         context.update({
@@ -64,7 +64,7 @@ class EventListView(generic.ListView):
         return context
 
     def get_queryset(self):
-        queryset = Event.objects.filter(status="Published",global_visibility=True, event_date_start__gte=datetime.date.today())
+        queryset = Event.objects.filter(status="confirmed",global_visibility=True, event_date_start__gte=datetime.date.today())
         return queryset
     
     # @csrf_exempt
@@ -137,7 +137,7 @@ class UserEventListView(LoginRequiredMixin,  generic.ListView):
         user = self.request.user
         
         queryset = user.usercalendar.events.filter(event_date_start__gte=datetime.date.today())
-        print(queryset)
+        
         return queryset
     
     def get_context_data(self, **kwargs):

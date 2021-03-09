@@ -19,7 +19,7 @@ class Command(BaseCommand):
                 title = row['title']
                 
                 description=row['description']
-                
+                status=row['status']
                 event_format=row['event_format']
                 language=row['language']
                 url=row['url']
@@ -31,7 +31,7 @@ class Command(BaseCommand):
                     user = user,   
                     title = title,
                     description=description,
-                    
+                    status=status,
                     event_format=event_format,
                     main_language=language,
                     event_url=url,
