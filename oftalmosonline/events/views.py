@@ -32,12 +32,12 @@ class LandingPageView(generic.TemplateView):
         next_in_seven=Event.objects.filter(event_date_start__gt=datetime.date.today(),event_date_start__lt=seven_days_ago).count()
         live_events=Event.objects.filter(event_format='live').count()
         online_events=Event.objects.filter(event_format='online').count()
-
+        recently_added = Event.objects.filter(created=datetime.date.today()).count()
         total_events=Event.objects.all().count()
         context.update({
                   "next_in_seven":next_in_seven, 
                   "live_events":live_events, 
-
+                  "recently_added":recently_added, 
                   "online_events":online_events, 
                   "total_events":total_events        
          })
